@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+  <meta charset="UTF-8">
+  <title>Usuários</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 24px; background: #f9f9f9; }
+    table { border-collapse: collapse; width: 100%; background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    th, td { border-bottom: 1px solid #eee; padding: 10px 12px; text-align: left; }
+    th { background: #fafafa; color: #555; font-weight: 600; }
+    .actions a, .actions button {
+      display: inline-flex; align-items: center; gap: 6px;
+      border: none; padding: 6px 10px; border-radius: 6px;
+      text-decoration: none; font-size: 14px; cursor: pointer;
+      transition: 0.2s ease;
+    }
+    .btn-edit { background: #2563eb; color: white; }
+    .btn-edit:hover { background: #1e40af; }
+    .btn-delete { background: #dc2626; color: white; }
+    .btn-delete:hover { background: #991b1b; }
+  </style>
+</head>
 <meta charset="UTF-8">
 <title>Usuários</title>
 <style>
@@ -66,11 +87,13 @@
                ($u->typeUser === 'N' ? 'Nutricionista' : 'Usuário');
         ?>
       </td>
-      <td>
-        <a href="?action=edit&id=<?= (int)$u->id ?>">Editar</a> |
-        <a href="#" onclick="confirmDelete(<?= (int)$u->id ?>)">Excluir</a>
-
-        <script>
+      <td class="actions">
+        <a href="?action=edit&id=<?= (int)$u->id ?>" class="btn-edit"><i data-lucide="edit-3"></i> Editar</a>
+        <button class="btn-delete" onclick="confirmDelete(<?= (int)$u->id ?>)">
+          <i data-lucide="trash-2"></i> Excluir
+        </button>
+               
+      <script>
         function confirmDelete(id) {
           Swal.fire({
             title: 'Tem certeza?',
@@ -87,11 +110,12 @@
             }
           });
         }
-        </script>
+      </script>
 
       </td>
     </tr>
   <?php endforeach; ?>
 </table>
+<script> lucide.createIcons(); </script>
 </body>
 </html>
