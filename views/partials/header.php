@@ -67,6 +67,178 @@
       body.sidebar-collapsed aside.sidebar{width:var(--sidebar-w-collapsed)}
       body.sidebar-collapsed .nav-item .label{display:none}
     }
+
+    /* === MODAL DE PERMISSÕES === */
+    .modal-permissions {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .modal-permissions.show {
+      display: flex;
+    }
+    .modal-content-perm {
+      background: var(--surface);
+      border-radius: 15px;
+      width: 100%;
+      max-width: 1200px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+    .modal-header-perm {
+      background: var(--primary);
+      color: var(--on-primary);
+      padding: 20px 30px;
+      border-radius: 15px 15px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .modal-header-perm h2 {
+      margin: 0;
+      font-size: 1.5em;
+    }
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      color: var(--on-primary);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn-close-modal:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .modal-body-perm {
+      padding: 30px;
+    }
+    .profile-selector-modal {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    .profile-btn-modal {
+      padding: 15px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      background: var(--surface-elev);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    .profile-btn-modal:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    .profile-btn-modal.active {
+      border-color: var(--primary);
+      background: rgba(34, 197, 94, 0.1);
+    }
+    .profile-btn-modal h3 {
+      margin: 0 0 5px 0;
+      font-size: 1.1em;
+    }
+    .profile-btn-modal .count {
+      font-size: 0.85em;
+      color: var(--muted);
+    }
+    .permissions-table-modal {
+      background: var(--surface-elev);
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .permissions-table-modal table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .permissions-table-modal thead {
+      background: var(--hover);
+    }
+    .permissions-table-modal th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+    .permissions-table-modal th:first-child {
+      padding-left: 20px;
+    }
+    .permissions-table-modal th.action-col {
+      text-align: center;
+      width: 100px;
+    }
+    .permissions-table-modal tbody tr:hover {
+      background: var(--hover);
+    }
+    .permissions-table-modal td {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .permissions-table-modal td:first-child {
+      padding-left: 20px;
+      font-weight: 500;
+    }
+    .permissions-table-modal td.action-cell {
+      text-align: center;
+    }
+    .permission-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .permission-icon.granted {
+      background: var(--primary);
+      color: var(--on-primary);
+    }
+    .permission-icon.denied {
+      background: var(--border);
+      color: var(--muted);
+    }
+    .legend-modal {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9em;
+    }
+    .legend-badge {
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.85em;
+    }
+    .legend-badge.create { background: #22c55e; color: white; }
+    .legend-badge.read { background: #3b82f6; color: white; }
+    .legend-badge.update { background: #f59e0b; color: white; }
+    .legend-badge.delete { background: #ef4444; color: white; }
   </style>
 </head>
 <body>
@@ -86,8 +258,13 @@
     <header class="topbar">
       <button class="btn" id="btnSidebar" aria-label="Alternar menu"><i data-lucide="menu"></i><span class="label">Menu</span></button>
       <div style="flex:1"></div>
+      <button class="btn" id="btnPermissions" title="Permissões"><i data-lucide="shield"></i><span class="label">Permissões</span></button>
       <button class="btn" id="btnTheme" title="Tema"><i data-lucide="sun"></i></button>
       <a class="btn btn-primary" href="/nutrihealth/public/?action=create"><i data-lucide="plus"></i> Novo</a>
     </header>
     <main class="content">
       <div class="page-head"><i data-lucide="layout-grid"></i><div><div class="page-title">Usuários</div><div class="page-sub">Gestão de usuários do sistema</div></div></div>
+
+      
+
+    
